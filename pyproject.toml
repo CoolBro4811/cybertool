@@ -1,0 +1,30 @@
+[project]
+name = "cybertool"
+version = "0.0.0"
+description = "Create plugins to run in a CCDC/Cyberpatriot/eCitadel environment."
+readme = {file = "README.txt", content-type = "text/markdown"}
+authors = [
+    {name="Colin Lamebert", email="piano4life010@gmail.com"}
+]
+
+keywords = ["CCDC", "CyberPatriot", "system hardening", "cybersecurity", "cybertool"]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers :: Cybersecurity Professionals",
+  "Topic :: Software Development :: Build Tools",
+]
+
+dependencies = [
+  "pluggy",
+  "typer",
+  "ruamel.yaml",
+  "jinja2"
+]
+
+[tool.setuptools.packages.find]
+include = ["cybertool*"]
+exclude = ["plugins*"]
+
+[project.scripts]
+cybertool = "cybertool.__main__:app"
