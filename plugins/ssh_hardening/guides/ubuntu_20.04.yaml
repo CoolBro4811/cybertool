@@ -1,0 +1,24 @@
+# guides/ubuntu_20.04.yaml
+before_apply:
+- "apt-get update"
+- "apt-get install -y sshaudit"
+config_modify:
+- "rm /etc/ssh/ssh_host_*"
+- "ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''"
+- "ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ''"
+- "awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.safe"
+- "mv /etc/ssh/moduli.safe /etc/ssh/moduli"
+- sed -i 's/^\#HostKey \/etc\/ssh\/ssh_host_\(rsa\|ed25519\)_key$/HostKey \/etc\/ssh\/ssh_host_\1_key/g' /etc/ssh/sshd_config
+- "echo -e '\n# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com\n# hardening guide.\nKexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256\nCiphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\nMACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com\nHostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com' > /etc/ssh/sshd_config.d/ssh-audit_hardening.conf"
+after_apply:
+- "sshaudit show-changes"
+- "sshaudit check-weak-ciphers"
+- "sshaudit check-ssh-options"
+- "iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set"
+- "iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j DROP"
+- "ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set"
+- "ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j DROP"
+- "DEBIAN_FRONTEND=noninteractive apt install -q -y netfilter-persistent iptables-persistent"
+- "service netfilter-persistent save"
+- "apt-get uninstall -y sshaudit"
+reload_command: "service ssh restart"
