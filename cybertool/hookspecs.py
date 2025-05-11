@@ -2,6 +2,7 @@ import pluggy
 
 HOOK_NAMESPACE = "cybertool"
 hookspec = pluggy.HookspecMarker(HOOK_NAMESPACE)
+hookimpl = pluggy.HookimplMarker(HOOK_NAMESPACE)
 
 
 class Spec:
@@ -10,7 +11,7 @@ class Spec:
         """Modify the parsed config dict and return it."""
 
     @hookspec
-    def before_apply(self, target: str) -> None:
+    def before_apply(self, target: str) -> bool:
         """Called before applying any changes."""
 
     @hookspec

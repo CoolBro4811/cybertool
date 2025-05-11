@@ -9,7 +9,7 @@ def setup_logger(level=logging.INFO):
 
 
 def validate_ssh_config(path: str) -> bool:
-    """Run `sshd -t -f <path>` to test syntax."""
+    """Run `sshd -t -f <path>` to test syntax (verifying tests)"""
     try:
         subprocess.run(["sshd", "-t", "-f", path], check=True)
         return True

@@ -26,5 +26,9 @@ dependencies = [
 include = ["cybertool*"]
 exclude = ["plugins*"]
 
+[tool.ruff]
+select = ["F", "I"]
+force-absolute-imports = true
+
 [project.scripts]
 cybertool = "cybertool.__main__:app"

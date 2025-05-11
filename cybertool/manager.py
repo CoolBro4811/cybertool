@@ -1,3 +1,4 @@
+import importlib
 from pathlib import Path
 
 import pluggy
@@ -12,15 +13,24 @@ class PluginManager:
         self._load_plugins(plugin_paths)
 
     def _load_plugins(self, paths):
+        print(paths)
         for p in paths:
-            try:
-                if p.suffix == ".py":
-                    spec = pluggy.util.spec_from_file_location(p.stem, p)
-                    module = pluggy.util.module_from_spec(spec)
-                    spec.loader.exec_module(module)  # type: ignore
-                    self.pm.register(module)
-            except Exception as e:
-                print(f"⚠️  Failed to load plugin {p.stem}: {e}")
+            if p.is_dir():
+                for py_file in p.glob("**/*.py"):
+                    self._load_plugin_file(py_file)
+            elif p.is_file() and p.suffix == ".py":
+                self._load_plugin_file(p)
 
-    def run_hook(self, hook_name: str, *args, **kwargs):
-        return getattr(self.pm.hook, hook_name)(*args, **kwargs)
+    def _load_plugin_file(self, py_file: Path):
+        try:
+            print(py_file.stem)
+            spec = importlib.util.spec_from_file_location(py_file.stem, py_file)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            if hasattr(module, "hookspec"):
+                self.pm.register(module)
+        except Exception as e:
+            print(f"Failed to load plugin {py_file.stem}: {e}")
+
+    def run_hook(self, hook_name: str, **kwargs):
+        return getattr(self.pm.hook, hook_name)(**kwargs)
