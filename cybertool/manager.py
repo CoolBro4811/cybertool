@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pluggy
 
-from .hookspecs import HOOK_NAMESPACE, Spec
+from cybertool.hookspecs import HOOK_NAMESPACE, Spec
 
 
 class PluginManager:

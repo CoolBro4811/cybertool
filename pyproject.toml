@@ -1,8 +1,8 @@
 [project]
 name = "cybertool"
-version = "0.0.0"
+version = "0.0.1"
 description = "Create plugins to run in a CCDC/Cyberpatriot/eCitadel environment."
-readme = {file = "README.txt", content-type = "text/markdown"}
+readme = {file = "README.md", content-type = "text/markdown"}
 authors = [
     {name="Colin Lamebert", email="piano4life010@gmail.com"}
 ]
@@ -10,25 +10,21 @@ authors = [
 keywords = ["CCDC", "CyberPatriot", "system hardening", "cybersecurity", "cybertool"]
 
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Intended Audience :: Developers :: Cybersecurity Professionals",
-  "Topic :: Software Development :: Build Tools",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers :: Cybersecurity Professionals",
+    "Topic :: Software Development :: Build Tools",
 ]
 
 dependencies = [
-  "pluggy",
-  "typer",
-  "ruamel.yaml",
-  "jinja2"
+    "pluggy",
+    "typer",
+    "ruamel.yaml",
+    "jinja2",
 ]
 
 [tool.setuptools.packages.find]
 include = ["cybertool*"]
 exclude = ["plugins*"]
-
-[tool.ruff]
-select = ["F", "I"]
-force-absolute-imports = true
 
 [project.scripts]
 cybertool = "cybertool.__main__:app"

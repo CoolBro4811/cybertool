@@ -2,8 +2,8 @@ from pathlib import Path
 
 import typer
 
-from .config.loader import load_template, write_atomic
-from .manager import PluginManager
+from cybertool.config.loader import load_template, write_atomic
+from cybertool.manager import PluginManager
 
 app = typer.Typer()
 

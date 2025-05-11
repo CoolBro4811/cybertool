@@ -1,6 +1,4 @@
-import sys
 import textwrap
-from pathlib import Path
 
 from cybertool.config.loader import load_template, write_atomic
 from cybertool.hookspecs import hookimpl, hookspec
